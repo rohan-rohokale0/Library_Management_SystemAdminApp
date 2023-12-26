@@ -25,11 +25,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object({
-  firstName: Yup.string().required("First Name is required"),
-  lastName: Yup.string().required("Last Name is required"),
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
+  userName: Yup.string().required("User Name is required"),
+  password: Yup.string().required("Password is required"),
 });
 
 const defaultTheme = createTheme();
@@ -37,50 +34,51 @@ const defaultTheme = createTheme();
 export default function Login() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const [snackbarOpen, setSnackbarOpen] = useState(true);
-  const [snackbarSeverity, setSnackbarSeverity] = useState(String);
 
-  // const data = async (event: React.FormEvent<HTMLFormElement>) => {
-  //     setIsLoading(true);
-  //     try {
-  //         event.preventDefault();
-  //         const data = new FormData(event.currentTarget);
-  //         const requestData = {
-  //             username: data.get("user"),
-  //             password: data.get("password"),
-  //         };
-  //         const axiosResponse: AxiosResponse<any> = await postRequest(
-  //             "https://devapi.specialtypayments.com/" + apiURL.LOGIN,
-  //             requestData
-  //         );
-  //         const LoginApiResponse: any = axiosResponse.data;
+  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
-  //         if (LoginApiResponse.LoginSuccess) {
-  //             navigate("/home");
-  //             // setSnackbarOpen(true);
-  //             // setSnackbarMessage('login successfully!');
-  //             // setSnackbarSeverity('success');
-  //         } else {
-  //             navigate("/");
-  //         }
-  //         setIsLoading(true);
-  //     } catch (e: any) {
-  //         toast.error(e.message);
-  //         // setSnackbarMessage(e.message);
-  //         // setSnackbarSeverity('error');
-  //         // setSnackbarOpen(true);
-  //         setIsLoading(false);
-  //     }
   // };
 
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
+      userName: "",
+      password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
+
+
+      setIsLoading(true);
+      try {
+        // event.preventDefault();
+        // const data = new FormData(event.currentTarget);
+        const requestData = {
+          username: values.userName,
+          password: values.password,
+        };
+        const axiosResponse: AxiosResponse<any> = await postRequest(
+          "https://devapi.specialtypayments.com/" + apiURL.LOGIN,
+          requestData
+        );
+        const LoginApiResponse: any = axiosResponse.data;
+
+        if (LoginApiResponse.LoginSuccess) {
+          navigate("/home");
+          // setSnackbarOpen(true);
+          // setSnackbarMessage('login successfully!');
+          // setSnackbarSeverity('success');
+        } else {
+          navigate("/");
+        }
+        setIsLoading(true);
+      } catch (e: any) {
+        toast.error(e.message);
+        // setSnackbarMessage(e.message);
+        // setSnackbarSeverity('error');
+        // setSnackbarOpen(true);
+        setIsLoading(false);
+      }
+      debugger;
       // Handle form submission
       console.log(values);
     },
@@ -88,119 +86,125 @@ export default function Login() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
+
       <div
         style={{ justifyContent: "center", display: "flex", padding: "10px" }}
       >
         <Card
           sx={{
+            maxWidth: 500,
             display: "flex",
             justifyContent: "center",
-            mt: 10,maxWidth:400
+            mt: 10,
           }}
         >
-          <form onSubmit={formik.handleSubmit}>
-            <CardContent>
-              <Grid container spacing={0}>
-                <Grid
-                  container
-                  direction="row"
-                  alignItems="center"
-                  justifyContent="center"
+          <CardContent>
+            <Grid container spacing={0}>
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <CssBaseline />
+                <Box
+                  sx={{
+                    marginTop: 4,
+                    p: 1,
+                    marginBottom: 4,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
                 >
-                  <CssBaseline />
-                  <Box
-                    sx={{
-                      marginTop: 4,
-                      p: 1,
-                      marginBottom: 4,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Avatar sx={{ m: 1, mb:2, bgcolor: "secondary.main" }}>
-                      <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                      Sign in
-                    </Typography>
+                  <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                    <LockOutlinedIcon />
+                  </Avatar>
+                  <Typography component="h1" variant="h5">
+                    Sign in
+                  </Typography>
+                  <Box sx={{ mt: 1 }}>
                     {isLoading && <Loader />}
-                    <Box  sx={{mt:2}}>
+                    <form onSubmit={formik.handleSubmit}>
                       <TextField
-                        id="firstName"
-                        name="firstName"
-                        label="First Name"
-                        placeholder="First Name"
+                        id="userName"
+                        name="userName"
+                        label="User Name"
+                        placeholder="User Name"
                         size="small"
-                     maxRows={10}
+                        autoFocus
+
                         variant="outlined"
                         fullWidth
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.firstName}
+                        value={formik.values.userName}
                         error={
-                          formik.touched.firstName &&
-                          Boolean(formik.errors.firstName)
+                          formik.touched.userName &&
+                          Boolean(formik.errors.userName)
                         }
                         helperText={
-                          formik.touched.firstName && formik.errors.firstName
+                          formik.touched.userName && formik.errors.userName
                         }
                       />
-                    </Box>
-                    <Box>
                       <TextField
-                        id="email"
-                     
-                        name="email"
-                        label="Email"
-                        variant="outlined"
-                        fullWidth
+                        id="password"
                         size="small"
                         margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        placeholder="Password"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.email}
+                        value={formik.values.password}
                         error={
-                          formik.touched.email && Boolean(formik.errors.email)
+                          formik.touched.password &&
+                          Boolean(formik.errors.password)
                         }
-                        helperText={formik.touched.email && formik.errors.email}
-                      />
-                    </Box>
-                    <Grid container justifyContent="center">
-                      <Button
-                        style={{
-                          maxWidth: "100px",
-                          maxHeight: "30px",
-                          minWidth: "100px",
-                          minHeight: "30px",
-                        }}
-                        type="submit"
-                        size="small"
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2, maxWidth: "md" }}
-                      >
-                        Login
-                      </Button>
-                    </Grid>
+                        helperText={
+                          formik.touched.password && formik.errors.password
+                        }
 
-                    <Grid container>
-                      <Grid item xs>
-                        <Typography align="center">
-                          <Link href="#" variant="body2">
-                            Forgot password?
-                          </Link>
-                        </Typography>
+                      />
+                      <Grid container justifyContent="center">
+                        <Button
+                          style={{
+                            maxWidth: "100px",
+                            maxHeight: "30px",
+                            minWidth: "100px",
+                            minHeight: "30px",
+                          }}
+                          type="submit"
+
+                          size="small"
+                          variant="contained"
+                          sx={{ mt: 3, mb: 2, maxWidth: "md" }}
+                        >
+                          Login
+                        </Button>
                       </Grid>
-                    </Grid>
-                    {/* <Box>
-                                        <LoginForm></LoginForm>
-                                        </Box> */}
+                      <Grid container>
+                        <Grid item xs>
+                          <Typography align="center">
+                            <Link href="#" variant="body2">
+                              Forgot password?
+                            </Link>
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                      {/* <Box>
+                                <LoginForm></LoginForm>
+                                </Box> */}
+                    </form>
                   </Box>
-                  <ToastContainer position="bottom-center" autoClose={5000} />
-                </Grid>
+                </Box>
+                <ToastContainer position="bottom-center" autoClose={5000} />
               </Grid>
-            </CardContent>
-          </form>
+            </Grid>
+          </CardContent>
         </Card>
       </div>
     </ThemeProvider>

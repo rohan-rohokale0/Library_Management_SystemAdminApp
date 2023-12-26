@@ -22,7 +22,6 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-
 const drawerWidth = 200;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -98,6 +97,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function Sidebar() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
+    var [selectedRoutes,setRoute]=React.useState(0);
 
     
   
@@ -111,22 +111,30 @@ export default function Sidebar() {
 
     const navigate = useNavigate();
     const location = useLocation();
-    var selectedRoute=0;
 
     useEffect(() => {  
+      if(location.pathname=='/home/dashboard')
+      {
+        setRoute(0);
+      }
+      else 
+      {
+        setRoute(1);
+
+      }
       //  toast.success("Login Sucessfully !!")
   })
 
  
     const navigateToPage= (value:any) => {
+      debugger
         if(value==0)
         {
-          selectedRoute=0;
-            navigate("/home")
+          
+            navigate("/home/dashboard")
         }
         else if(value==1)
         {
-          selectedRoute=1;
             navigate("/home/merchant-list")
         }
   };
@@ -150,7 +158,9 @@ export default function Sidebar() {
           <List>
             {['Dashboard', 'Merchant', 'Send email', 'Drafts'].map((text, index) => (
               <ListItem
+                className={selectedRoutes==index?'active':''}
               key={text} disablePadding sx={{ display: 'block' }} onClick={() => {
+                setRoute(index);
                  navigateToPage(index)
               }}>
                 <ListItemButton
