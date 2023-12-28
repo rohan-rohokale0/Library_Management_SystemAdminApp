@@ -19,8 +19,6 @@ import { useState } from "react";
 import Loader from "../Components/loader";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
-import CustomSnackbar from "../Components/Snackbar";
-import { useForm, SubmitHandler } from "react-hook-form";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -63,7 +61,10 @@ export default function Login() {
         const LoginApiResponse: any = axiosResponse.data;
 
         if (LoginApiResponse.LoginSuccess) {
+          debugger
+          sessionStorage.setItem('accessToken', LoginApiResponse.AccessToken);
           navigate("/home");
+
           // setSnackbarOpen(true);
           // setSnackbarMessage('login successfully!');
           // setSnackbarSeverity('success');
@@ -73,9 +74,7 @@ export default function Login() {
         setIsLoading(true);
       } catch (e: any) {
         toast.error(e.message);
-        // setSnackbarMessage(e.message);
-        // setSnackbarSeverity('error');
-        // setSnackbarOpen(true);
+      
         setIsLoading(false);
       }
       debugger;

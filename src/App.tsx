@@ -14,11 +14,8 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        {/* Ebix */}
+    
         <BrowserRouter basename='/'>
-
-          {/* EE */}
-          {/* <BrowserRouter>  */}
           <div className="App">
             <Routes>
               <Route path='/' element={< Login />} />
@@ -27,11 +24,6 @@ class App extends Component {
                 <Route path='dashboard' element={< Dashboard />}></Route>
                 <Route path='merchant-list' element={< MerchantList />}></Route>
                 <Route path='add-merchant' element={< AddMerchant />}></Route>
-
-                {/* <Route path='installments/:loanNumber/:loanType' element={< Installments />}></Route>
-                <Route path='transactions' element={< TransactionDetails />}></Route>
-                <Route path='profile' element={< Profile />}></Route>
-                <Route path='payment-status' element={< PaymentStatus />}></Route> */}
               </Route>
             </Routes>
           </div>
