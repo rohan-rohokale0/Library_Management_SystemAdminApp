@@ -26,21 +26,6 @@ import { getRequest, postRequest } from "../Services/httpservice";
 import axios, { AxiosError } from "axios";
 import Loader from "../Components/loader";
 
-
-// export interface TransactionReceipt {
-//   civilId: string;
-//   status: string;
-//   message: string;
-//   custName: string;
-//   custAddress: string;
-//   custMobile: string;
-//   receiptDate: string;
-//   chargesAmount: string;
-//   subTotal: string;
-//   totalAmount: string;
-//   InstallmentDetails: InstallmentDetails[]
-// }
-
 export interface MerchantMasterViewModel {
   ID: string;
   MerchantName: string;
@@ -190,7 +175,6 @@ const StyledTable = styled(Table)(() => ({
 // ];
 export default function MerchantList() {
   const navigate = useNavigate();
-
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [merchantDetailsList, setMerchantDetails] = useState<MerchantMasterViewModel[]>([]);

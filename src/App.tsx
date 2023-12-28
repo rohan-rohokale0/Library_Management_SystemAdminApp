@@ -8,6 +8,8 @@ import Home from './Pages/Home';
 import Dashboard from './Pages/Dashboard';
 import MerchantList from './Pages/merchant_list';
 import AddMerchant from './Pages/add_merchant';
+import CategoryList from './Pages/Category_List';
+import AddCategory from './Pages/add_category';
 
 
 class App extends Component {
@@ -24,6 +26,8 @@ class App extends Component {
                 <Route path='dashboard' element={< Dashboard />}></Route>
                 <Route path='merchant-list' element={< MerchantList />}></Route>
                 <Route path='add-merchant' element={< AddMerchant />}></Route>
+                <Route path='category-list' element={< CategoryList />}></Route>
+                <Route path='add-category' element={< AddCategory />}></Route>
               </Route>
             </Routes>
           </div>
