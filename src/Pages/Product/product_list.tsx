@@ -21,16 +21,23 @@ import { Container } from "@mui/system";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getRequest, postRequest } from "../Services/httpservice";
+import { getRequest, postRequest } from "../../Services/httpservice";
 import axios, { AxiosError } from "axios";
-import Loader from "../Components/loader";
+import Loader from "../../Components/loader";
 import styled from "@emotion/styled";
-import AddCategory from "./add_category";
+import AddCategory from "../add_category";
+import { Height } from "@material-ui/icons";
+import { string } from "yup";
+import { get } from "http";
+import EditIcon from '@mui/icons-material/Edit';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 export interface MerchantMasterViewModel {
-  id: string
-  categoryName:string
-
+  id: number;
+  productName: string;
+  categoryName: string;
+  status: boolean;
+  productImage: any;
 }
 
 const StyledTable = styled(Table)(() => ({
@@ -42,7 +49,7 @@ const StyledTable = styled(Table)(() => ({
     "& tr": { "& td": { paddingLeft: 0, textTransform: "capitalize" } },
   },
 }));
-export default function CategoryList() {
+export default function ProductList() {
   const navigate = useNavigate();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -73,12 +80,17 @@ export default function CategoryList() {
 
   const [open, setDialogOpen] = React.useState(false);
 
-  const navigateToAddMechant = async () => {
-    setDialogOpen(true);
+  const navigateToAddProduct = async () => {
+    navigate("/home/add-product");
+  };
+
+  const getStatusValue =  (value: any) => {
+    debugger
+    return value.toString();
   };
 
   useEffect(() => {
-    debugger
+    debugger;
     const accessToken = sessionStorage.getItem("accessToken");
     getTransactionDetails();
   }, []);
@@ -88,9 +100,9 @@ export default function CategoryList() {
       //  setIsLoading(true);
       const accessToken = sessionStorage.getItem("accessToken");
       const response = await getRequest(
-        "http://localhost:5454/category/getCategory"
+        "http://localhost:5454/product/get-product"
       );
-      debugger
+      debugger;
 
       if (response == null) throw new Error(`HTTP error! Status`);
 
@@ -132,11 +144,11 @@ export default function CategoryList() {
       <Card variant="outlined" sx={{ p: 2, mb: 20 }}>
         <Grid container sx={{ mt: 2 }} justifyContent={"space-between"}>
           <Grid>
-            <Typography variant="h6">Category</Typography>
+            <Typography variant="h6">Product</Typography>
           </Grid>
           <Grid item justifyContent={"flex-end"}>
-            <Button variant="contained" onClick={navigateToAddMechant}>
-              Add Category
+            <Button variant="contained" onClick={navigateToAddProduct}>
+              Add Product
             </Button>
           </Grid>
         </Grid>
@@ -149,6 +161,9 @@ export default function CategoryList() {
               <TableRow>
                 <TableCell align="left">Id</TableCell>
                 <TableCell align="center">Category Name</TableCell>
+                <TableCell align="center">Product Image</TableCell>
+                <TableCell align="center">Product Name</TableCell>
+                <TableCell align="center">Status</TableCell>
                 <TableCell align="center">Action</TableCell>
               </TableRow>
             </TableHead>
@@ -162,12 +177,28 @@ export default function CategoryList() {
               ).map((row: any, index: any) => (
                 <TableRow key={index}>
                   <TableCell align="left">{row.id}</TableCell>
+                  <TableCell align="center">{row.categoryName}</TableCell>
                   <TableCell align="center">
-                    {row.categoryName}
+                    {
+                      <img
+                        style={{ height: "5vh" }}
+                        src={row.productImage}
+                      />
+                    }
+                  </TableCell>
+                  <TableCell align="center">{row.productName}</TableCell>
+                  <TableCell align="center">
+                    {getStatusValue(row.status)}
                   </TableCell>
                   <TableCell align="center">
                     <IconButton aria-label="delete" color="primary">
-                      <DeleteIcon />
+                      <EditIcon />                      
+                    </IconButton>
+                    <IconButton aria-label="delete" color="primary">
+                    <RemoveRedEyeIcon/>
+                    </IconButton>
+                    <IconButton aria-label="delete" color="primary">
+                      <DeleteIcon />                      
                     </IconButton>
                   </TableCell>
                 </TableRow>

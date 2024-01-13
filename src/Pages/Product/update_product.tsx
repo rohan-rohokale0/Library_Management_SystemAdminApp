@@ -32,7 +32,7 @@ export default function AddMerchant() {
       };
     return (
         <Card sx={{ p: 2 }}>
-        <Typography variant="h5">+ Add Category</Typography>
+        <Typography variant="h5">+ Add Product</Typography>
         <hr></hr>
   
         <Grid container spacing={4} sx={{ p: 2 }}>

@@ -32,6 +32,10 @@ import Menu from "@mui/material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import CategoryIcon from "@mui/icons-material/Category";
+import ProductionQuantityLimitsTwoToneIcon from "@mui/icons-material/ProductionQuantityLimitsTwoTone";
 
 const drawerWidth = 200;
 
@@ -268,8 +272,15 @@ export default function Sidebar() {
       setRoute(0);
     } else if (location.pathname == "/home/merchant-list") {
       setRoute(1);
-    } else if (location.pathname == "/home/category-list" || location.pathname=="/home/add-category") {
+    } else if (
+      location.pathname == "/home/category-list" ||
+      location.pathname == "/home/add-category"
+    ) {
       setRoute(2);
+    }
+    else if( location.pathname == "/home/product-list")
+    {
+      setRoute(3);
     }
   });
 
@@ -280,8 +291,28 @@ export default function Sidebar() {
       navigate("/home/merchant-list");
     } else if (value == 2) {
       navigate("/home/category-list");
+    } else if (value == 3) {
+      navigate("/home/product-list");
     }
   };
+
+  const getPlatformIcon = (iconName: any): any => {
+    switch (iconName) {
+      case "DashboardIcon":
+        return <DashboardIcon />;
+      case "StorefrontIcon":
+        return <StorefrontIcon />;
+      case "CategoryIcon":
+        return <CategoryIcon />;
+      case "ProductionQuantityLimitsTwoToneIcon":
+        return (
+          <ProductionQuantityLimitsTwoToneIcon></ProductionQuantityLimitsTwoToneIcon>
+        );
+      default:
+        return <DashboardIcon />; // or return null if you don't have it
+    }
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -373,10 +404,18 @@ export default function Sidebar() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Dashboard", "Merchant", "Category"].map((text, index) => (
+          {[
+            { name: "Dashboard", iconName: "DashboardIcon" },
+            { name: "Merchant", iconName: "StorefrontIcon" },
+            { name: "Category", iconName: "CategoryIcon" },
+            {
+              name: "Product",
+              iconName: "ProductionQuantityLimitsTwoToneIcon",
+            },
+          ].map((text, index) => (
             <ListItem
               className={selectedRoutes == index ? "active" : ""}
-              key={text}
+              key={text.name}
               disablePadding
               sx={{ display: "block" }}
               onClick={() => {
@@ -398,9 +437,12 @@ export default function Sidebar() {
                     justifyContent: "center",
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {getPlatformIcon(text.iconName)}
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText
+                  primary={text.name}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
               </ListItemButton>
             </ListItem>
           ))}

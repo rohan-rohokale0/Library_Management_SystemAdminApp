@@ -18,7 +18,7 @@ function Home() {
      
       <Sidebar></Sidebar>
 
-    <Footer></Footer>
+    {/* <Footer></Footer> */}
     </div>
   );
 
