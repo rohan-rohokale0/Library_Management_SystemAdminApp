@@ -57,9 +57,6 @@ export default function ProductList() {
     MerchantMasterViewModel[]
   >([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  //    const [transactions, setTransactions] = useState<Transaction[]>([]);
-
   const handleChangePage = (_: any, newPage: React.SetStateAction<number>) => {
     setPage(newPage);
   };
@@ -77,27 +74,21 @@ export default function ProductList() {
       padding-bottom: 0;
     }
   `);
-
   const [open, setDialogOpen] = React.useState(false);
-
   const navigateToAddProduct = async () => {
     navigate("/home/add-product");
   };
-
   const getStatusValue =  (value: any) => {
-    debugger
     return value.toString();
   };
 
   useEffect(() => {
-    debugger;
     const accessToken = sessionStorage.getItem("accessToken");
     getTransactionDetails();
   }, []);
 
   const getTransactionDetails = async () => {
     try {
-      //  setIsLoading(true);
       const accessToken = sessionStorage.getItem("accessToken");
       const response = await getRequest(
         "http://localhost:5454/product/get-product"
@@ -127,6 +118,12 @@ export default function ProductList() {
     }
   };
 
+  const navigateToUpdateProduct = async (id:any) => {
+      navigate(`/home/update-product/${id}`);
+  }
+
+ 
+
   const handleOnAgree = (event: any, reason: any) => {
     debugger;
     // do action to handle on agree deleting an user
@@ -136,7 +133,6 @@ export default function ProductList() {
       setDialogOpen(false);
     }
   };
-  ///const handleClose = (event: any, reason: any) => {
 
   return (
     <div>
@@ -154,7 +150,6 @@ export default function ProductList() {
         </Grid>
 
         <Divider sx={{ mt: 2 }}></Divider>
-
         <Box width="100%" overflow="auto">
           <StyledTable>
             <TableHead>
@@ -175,7 +170,11 @@ export default function ProductList() {
                   )
                 : merchantDetailsList
               ).map((row: any, index: any) => (
-                <TableRow key={index}>
+
+                
+                  
+              
+                <TableRow  key={index}>
                   <TableCell align="left">{row.id}</TableCell>
                   <TableCell align="center">{row.categoryName}</TableCell>
                   <TableCell align="center">
@@ -191,7 +190,7 @@ export default function ProductList() {
                     {getStatusValue(row.status)}
                   </TableCell>
                   <TableCell align="center">
-                    <IconButton aria-label="delete" color="primary">
+                    <IconButton aria-label="Edit" color="primary" onClick={()=> navigateToUpdateProduct(row.id)}>
                       <EditIcon />                      
                     </IconButton>
                     <IconButton aria-label="delete" color="primary">

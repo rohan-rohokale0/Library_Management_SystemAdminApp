@@ -278,7 +278,7 @@ export default function Sidebar() {
     ) {
       setRoute(2);
     }
-    else if( location.pathname == "/home/product-list")
+    else if( location.pathname == "/home/product-list" ||  location.pathname == "/home/add-product" )
     {
       setRoute(3);
     }

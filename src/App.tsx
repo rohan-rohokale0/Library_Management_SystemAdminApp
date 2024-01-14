@@ -12,6 +12,8 @@ import CategoryList from "./Pages/Category_List";
 import AddCategory from "./Pages/add_category";
 import ProductList from "./Pages/Product/product_list";
 import AddProduct from "./Pages/Product/add-product";
+import updateProduct from "./Pages/Product/update_product";
+import UpdateProduct from "./Pages/Product/update_product";
 
 class App extends Component {
   render() {
@@ -30,6 +32,8 @@ class App extends Component {
                 <Route path="add-category" element={<AddCategory />}></Route>
                 <Route path="product-list" element={<ProductList />}></Route>
                 <Route path="add-product" element={<AddProduct />}></Route>
+                <Route path="update-product/:id" element={<UpdateProduct />}></Route>
+
               </Route>
             </Routes>
           </div>

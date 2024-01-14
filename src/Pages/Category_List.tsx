@@ -5,6 +5,11 @@ import {
   Box,
   Button,
   CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
   Grid,
   Icon,
@@ -15,23 +20,45 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TextField,
   Typography,
+  createTheme,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { Container } from "@mui/system";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getRequest, postRequest } from "../Services/httpservice";
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import Loader from "../Components/loader";
 import styled from "@emotion/styled";
 import AddCategory from "./add_category";
+import * as Yup from "yup";
+import { apiURL } from "../Constant/ApiUrlConstant";
+import { toast } from "react-toastify";
+import { useFormik } from "formik";
+import EditIcon from '@mui/icons-material/Edit';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 export interface MerchantMasterViewModel {
-  id: string
-  categoryName:string
-
+  id: string;
+  categoryName: string;
 }
+
+const getMuiTheme = () =>
+  createTheme({
+    components: {
+      MuiDialogContent: {
+        styleOverrides: {
+          root: {
+            padding: "10px",
+          },
+        },
+      },
+    },
+  });
 
 const StyledTable = styled(Table)(() => ({
   whiteSpace: "pre",
@@ -41,6 +68,15 @@ const StyledTable = styled(Table)(() => ({
   "& tbody": {
     "& tr": { "& td": { paddingLeft: 0, textTransform: "capitalize" } },
   },
+}));
+
+
+const HR = styled("hr")(({ theme }) => ({
+  margin: "10px 0px 24px",
+  flexShrink: "0",
+  borderWidth: "0px 0px thin",
+  borderStyle: "solid",
+  borderColor: "rgba(0,0,0.12)",
 }));
 export default function CategoryList() {
   const navigate = useNavigate();
@@ -71,14 +107,8 @@ export default function CategoryList() {
     }
   `);
 
-  const [open, setDialogOpen] = React.useState(false);
-
-  const navigateToAddMechant = async () => {
-    setDialogOpen(true);
-  };
-
   useEffect(() => {
-    debugger
+    debugger;
     const accessToken = sessionStorage.getItem("accessToken");
     getTransactionDetails();
   }, []);
@@ -90,7 +120,7 @@ export default function CategoryList() {
       const response = await getRequest(
         "http://localhost:5454/category/getCategory"
       );
-      debugger
+      debugger;
 
       if (response == null) throw new Error(`HTTP error! Status`);
 
@@ -114,17 +144,50 @@ export default function CategoryList() {
       }
     }
   };
+  const validationSchema = Yup.object({
+    categoryName: Yup.string().required("Please Enter Category"),
+  });
 
-  const handleOnAgree = (event: any, reason: any) => {
-    debugger;
-    // do action to handle on agree deleting an user
-    // dispatch(deleteUser({ title: "Delete User", details: selectedUser }));
-    if (reason && reason === "backdropClick") return;
-    else {
-      setDialogOpen(false);
-    }
-  };
+  const formik = useFormik({
+    initialValues: {
+      categoryName: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      debugger;
+      setIsLoading(true);
+      try {
+        debugger;
+        const requestData = {
+          name: values.categoryName,
+        };
+        const axiosResponse: AxiosResponse<any> = await postRequest(
+          "http://localhost:5454/" + apiURL.ADD_CATEGORY,
+          requestData
+        );
+        debugger;
+        if (axiosResponse.status == 200) {
+          const LoginApiResponse: any = axiosResponse.data;
+          toast.success(LoginApiResponse);
+          setOpen(false);
+          getTransactionDetails();
+        }
+        setIsLoading(false);
+      } catch (e: any) {
+        toast.error(e.message);
+        setIsLoading(false);
+      }
+    },
+  });
   ///const handleClose = (event: any, reason: any) => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div>
@@ -135,7 +198,7 @@ export default function CategoryList() {
             <Typography variant="h6">Category</Typography>
           </Grid>
           <Grid item justifyContent={"flex-end"}>
-            <Button variant="contained" onClick={navigateToAddMechant}>
+            <Button variant="contained" onClick={handleClickOpen}>
               Add Category
             </Button>
           </Grid>
@@ -162,12 +225,16 @@ export default function CategoryList() {
               ).map((row: any, index: any) => (
                 <TableRow key={index}>
                   <TableCell align="left">{row.id}</TableCell>
+                  <TableCell align="center">{row.categoryName}</TableCell>
                   <TableCell align="center">
-                    {row.categoryName}
-                  </TableCell>
-                  <TableCell align="center">
+                    <IconButton aria-label="Edit" color="primary" >
+                      <EditIcon />                      
+                    </IconButton>
                     <IconButton aria-label="delete" color="primary">
-                      <DeleteIcon />
+                    <RemoveRedEyeIcon/>
+                    </IconButton>
+                    <IconButton aria-label="delete" color="primary">
+                      <DeleteIcon />                      
                     </IconButton>
                   </TableCell>
                 </TableRow>
@@ -187,11 +254,67 @@ export default function CategoryList() {
             backIconButtonProps={{ "aria-label": "Previous Page" }}
           />
         </Box>
-        <AddCategory
-          open={open}
-          onAgree={handleOnAgree}
-          onDisagree={() => handleOnAgree}
-        ></AddCategory>
+
+        <React.Fragment>
+          <Dialog
+          PaperProps={{
+            sx: {
+              width: "50%",
+              maxHeight: 300,
+              p: 0,
+            },
+          }}
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <form onSubmit={formik.handleSubmit}>
+              <DialogTitle id="alert-dialog-title">
+                {"Add Category"}
+              </DialogTitle>             
+              <DialogContent sx={{ p: 2 }}>
+                <Grid container spacing={4} sx={{ p: 2 }}>
+                  <Grid item xs={10}>
+                    <TextField
+                      id="categoryName"
+                      name="categoryName"
+                      label="Category Name"
+                      placeholder="Category Name"
+                      size="small"
+                      variant="outlined"
+                      fullWidth
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.categoryName}
+                      error={
+                        formik.touched.categoryName &&
+                        Boolean(formik.errors.categoryName)
+                      }
+                      helperText={
+                        formik.touched.categoryName &&
+                        formik.errors.categoryName
+                      }
+                    />
+                  </Grid>
+                </Grid>
+                {/* <DialogContentText id="alert-dialog-description">
+                Let Google help apps determine location. This means sending
+                anonymous location data to Google, even when no apps are
+                running.
+              </DialogContentText> */}
+              </DialogContent>
+              <DialogActions>
+                <Button variant="outlined" onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button type="submit" variant="contained">
+                  Save
+                </Button>
+              </DialogActions>
+            </form>
+          </Dialog>
+        </React.Fragment>
       </Card>
     </div>
   );
