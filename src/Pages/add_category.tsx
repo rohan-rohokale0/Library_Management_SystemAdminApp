@@ -145,6 +145,8 @@ const AddCategory = ({ open, onDisagree }: any) => {
             <Grid>
               <DialogTitle id="alert-dialog-title">Add Category</DialogTitle>
             </Grid>
+
+            
             <Grid item justifyContent={"flex-end"}>
               {/* <IconButton >
             <CloseIcon /> */}
@@ -152,7 +154,10 @@ const AddCategory = ({ open, onDisagree }: any) => {
             </Grid>
           </Grid>
 
-          
+
+
+
+
           <Divider></Divider>
           <DialogContent sx={{ p: 2 }}>
             <Grid container spacing={4} sx={{ p: 2 }}>
