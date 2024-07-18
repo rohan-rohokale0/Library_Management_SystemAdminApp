@@ -1,211 +1,214 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
+import { LoadingButton } from "@mui/lab";
+import { Card, Checkbox, Grid, TextField, Typography } from "@mui/material";
+import { Box, styled, useTheme } from "@mui/material";
+import { Formik } from "formik";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import * as Yup from "yup";
+import ImageSlider from "../Components/Carousel/ImageSlider";
+import { Paragraph } from "../Components/Typography";
+import { apiURL } from "../Constant/ApiUrlConstant";
 import { AxiosResponse } from "axios";
 import { postRequest } from "../Services/httpservice";
-import { apiURL } from "../Constant/ApiUrlConstant";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import Loader from "../Components/loader";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { toast, ToastContainer } from "react-toastify";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 
-const validationSchema = Yup.object({
-  userName: Yup.string().required("User Name is required"),
-  password: Yup.string().required("Password is required"),
+const FlexBox = styled(Box)(() => ({ display: "flex", alignItems: "center" }));
+const JustifyBox = styled(FlexBox)(() => ({ justifyContent: "center" }));
+const ContentBox = styled(Box)(() => ({
+  height: "100%",
+  padding: "10px",
+  position: "relative",
+  background: "rgba(0, 0, 0, 0.01)",
+}));
+
+const JWTRoot = styled(JustifyBox)(() => ({
+  // background: '#1A2038',
+  minHeight: "100vh !important",
+
+  "& .card": {
+    // maxWidth: 800,
+    // minHeight: 400,
+    margin: "1rem",
+    display: "flex",
+    borderRadius: 12,
+    alignItems: "center",
+  },
+}));
+
+const H4 = styled("h4")(({ theme }) => ({
+  fontSize: "1.3rem",
+  fontWeight: "600",
+  marginBottom: "16px",
+  textTransform: "capitalize",
+  color: "#2a2626",
+}));
+
+// inital login credentials
+const initialValues = {
+  email: "",
+  password: "",
+};
+
+// form field validation schema
+const validationSchema = Yup.object().shape({
+  password: Yup.string()
+    .min(6, "Password must be 6 character length")
+    .required("Password is required!"),
+  email: Yup.string()
+    .email("Invalid Email address")
+    .required("Email is required!"),
 });
 
-const defaultTheme = createTheme();
-
-export default function Login() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+const Login = () => {
+  const theme = useTheme();
   const navigate = useNavigate();
-
-  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-
-  // };
-
-  const formik = useFormik({
-    initialValues: {
-      userName: "",
-      password: "",
-    },
-    validationSchema: validationSchema,
-    onSubmit: async (values) => {
-
-
-      setIsLoading(true);
-      try {
-        // event.preventDefault();
-        // const data = new FormData(event.currentTarget);
-        const requestData = {
-          username: values.userName,
-          password: values.password,
-        };
-        const axiosResponse: AxiosResponse<any> = await postRequest(
-          "https://devapi.specialtypayments.com/" + apiURL.LOGIN,
-          requestData
-        );
-        const LoginApiResponse: any = axiosResponse.data;
-
-        if (LoginApiResponse.LoginSuccess) {
-          debugger
-          sessionStorage.setItem('accessToken', LoginApiResponse.AccessToken);
-          navigate("/home");
-
-          // setSnackbarOpen(true);
-          // setSnackbarMessage('login successfully!');
-          // setSnackbarSeverity('success');
-        } else {
-          navigate("/");
-        }
-        setIsLoading(true);
-      } catch (e: any) {
-        toast.error(e.message);
-      
-        setIsLoading(false);
+  const [loading, setLoading] = useState(false);
+  const handleFormSubmit = async (values: any) => {
+    setLoading(true);
+    try {
+      const requestData = {
+        email: values.email,
+        password: values.password,
+      };
+      const url= process.env.REACT_APP_API_URL + apiURL.LOGIN;
+    debugger
+      const axiosResponse: AxiosResponse<any> = await postRequest(
+        process.env.REACT_APP_API_URL + apiURL.LOGIN,
+        requestData
+      );
+      const LoginApiResponse: any = axiosResponse.data;
+      if (LoginApiResponse.success) {
+        toast.success("Login Sucessfully !!");
+        localStorage.setItem("Users", JSON.stringify(LoginApiResponse.resultData));
+        navigate("/home");
+      } else {
+        setLoading(false);
+        toast.error(LoginApiResponse.statusMessage);
       }
-      debugger;
-      // Handle form submission
-      console.log(values);
-    },
-  });
+      setLoading(true);
+    } catch (e: any) {
+      toast.error(e.message);
+      setLoading(false);
+    }
+  };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-
-      <div
-        style={{ justifyContent: "center", display: "flex", padding: "10px" }}
-      >
-        <Card
-          sx={{
-            maxWidth: 500,
-            display: "flex",
-            justifyContent: "center",
-            mt: 10,
-          }}
-        >
-          <CardContent>
-            <Grid container spacing={0}>
-              <Grid
-                container
-                direction="row"
-                alignItems="center"
-                justifyContent="center"
+    <JWTRoot>
+      <Card className="card">
+        <Grid container>
+          <Grid item sm={6} xs={12}>
+            <Box p={0} height="100%" sx={{ minWidth: 320 }}>
+              <ImageSlider />
+            </Box>
+          </Grid>
+          <Grid item sm={6} xs={12}>
+            <ContentBox>
+              <Formik
+                onSubmit={handleFormSubmit}
+                initialValues={initialValues}
+                validationSchema={validationSchema}
               >
-                <CssBaseline />
-                <Box
-                  sx={{
-                    marginTop: 4,
-                    p: 1,
-                    marginBottom: 4,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                    <LockOutlinedIcon />
-                  </Avatar>
-                  <Typography component="h1" variant="h5">
-                    Sign in
-                  </Typography>
-                  <Box sx={{ mt: 1 }}>
-                    {isLoading && <Loader />}
-                    <form onSubmit={formik.handleSubmit}>
-                      <TextField
-                        id="userName"
-                        name="userName"
-                        label="User Name"
-                        placeholder="User Name"
-                        size="small"
-                        autoFocus
+                {({
+                  values,
+                  errors,
+                  touched,
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                }) => (
+                  <form onSubmit={handleSubmit}>
+                    {loading && <Loader />}
+                    <Box textAlign="center" sx={{ mb: 4 }}>
+                      <H4>Login</H4>
+                    </Box>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      type="email"
+                      name="email"
+                      label="Email"
+                      variant="outlined"
+                      onBlur={handleBlur}
+                      value={values.email}
+                      onChange={handleChange}
+                      helperText={touched.email && errors.email}
+                      error={Boolean(errors.email && touched.email)}
+                      sx={{ mb: 2 }}
+                    />
+                    <TextField
+                      fullWidth
+                      size="small"
+                      name="password"
+                      type="password"
+                      label="Password"
+                      variant="outlined"
+                      onBlur={handleBlur}
+                      value={values.password}
+                      onChange={handleChange}
+                      helperText={touched.password && errors.password}
+                      error={Boolean(errors.password && touched.password)}
+                      sx={{ mb: 1.1 }}
+                    />
+                    <FlexBox justifyContent="space-between">
+                      <NavLink
+                        to="/auth/forgot-password"
+                        style={{ color: theme.palette.primary.main }}
+                      >
+                        Forgot password?
+                      </NavLink>
+                      {/* <p>Don't have an account?</p>  */}
+                      {/* <NavLink
+                        to="/auth/forgot-password"
+                        style={{ color: theme.palette.primary.main }}
+                      > Register
+                      </NavLink> */}
+                    </FlexBox>
+                    {/* <FlexBox justifyContent="space-between">
+                      <NavLink
+                        to="/auth/forgot-password"
+                        style={{ color: theme.palette.primary.main }}
+                      >
+                        Forgot password?
+                      </NavLink>
+                    </FlexBox> */}
+                    <Box textAlign="center">
+                      <LoadingButton
+                        style={{
+                          maxWidth: "120px",
+                          maxHeight: "35px",
+                          minWidth: "120px",
+                          minHeight: "35px",
+                        }}
+                        type="submit"
+                        color="primary"
+                        loading={loading}
+                        variant="contained"
+                        sx={{ my: 2 }}
+                      >
+                        Login
+                      </LoadingButton>
+                    </Box>
 
-                        variant="outlined"
-                        fullWidth
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.userName}
-                        error={
-                          formik.touched.userName &&
-                          Boolean(formik.errors.userName)
-                        }
-                        helperText={
-                          formik.touched.userName && formik.errors.userName
-                        }
-                      />
-                      <TextField
-                        id="password"
-                        size="small"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        placeholder="Password"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.password}
-                        error={
-                          formik.touched.password &&
-                          Boolean(formik.errors.password)
-                        }
-                        helperText={
-                          formik.touched.password && formik.errors.password
-                        }
-
-                      />
-                      <Grid container justifyContent="center">
-                        <Button
-                          style={{
-                            maxWidth: "100px",
-                            maxHeight: "30px",
-                            minWidth: "100px",
-                            minHeight: "30px",
-                          }}
-                          type="submit"
-
-                          size="small"
-                          variant="contained"
-                          sx={{ mt: 3, mb: 2, maxWidth: "md" }}
-                        >
-                          Login
-                        </Button>
-                      </Grid>
-                      <Grid container>
-                        <Grid item xs>
-                          <Typography align="center">
-                            <Link href="#" variant="body2">
-                              Forgot password?
-                            </Link>
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                      {/* <Box>
-                                <LoginForm></LoginForm>
-                                </Box> */}
-                    </form>
-                  </Box>
-                </Box>
-                <ToastContainer position="bottom-center" autoClose={5000} />
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </div>
-    </ThemeProvider>
+                    <FlexBox justifyContent="center">
+                      <p>Don't have an account? </p>
+                      <NavLink
+                        to="/auth/register"
+                        style={{ color: theme.palette.primary.main }}
+                      >
+                        Register
+                      </NavLink>
+                    </FlexBox>
+                  </form>
+                )}
+              </Formik>
+            </ContentBox>
+          </Grid>
+        </Grid>
+      </Card>
+    </JWTRoot>
   );
-}
+};
+
+export default Login;

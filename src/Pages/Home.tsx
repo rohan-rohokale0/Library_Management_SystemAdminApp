@@ -13,12 +13,21 @@ function Home() {
 
 
   return (
-    <div style={{ height: '100vh', background: '#F5F5F7', width: '100%', overflowY: 'auto' }}>
+    <div style={{ background: '#F5F5F7',
+    // /* overflow-x: hidden; */
+    // padding: 0px;
+    // margin: 0px;
+    // background-color: #ffff;
+    // font-size: 16px;
+    // color: #333;
+    
+    
+    }}>
       {/* <Header></Header> */}
      
-      <Sidebar></Sidebar>
+      <Sidebar ></Sidebar>
 
-    <Footer></Footer>
+    {/* <Footer></Footer> */}
     </div>
   );
 

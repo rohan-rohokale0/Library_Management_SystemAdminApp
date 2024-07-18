@@ -46,9 +46,19 @@
 
 
 
-import { Box, Card, Grid, Icon, IconButton, styled, Tooltip } from '@mui/material';
+import { Box, Card, Grid, Icon, IconButton, ListItemIcon, styled, Tooltip, Typography } from '@mui/material';
 import clsx from 'clsx';
 import { ToastContainer } from 'react-toastify';
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
+import CategoryIcon from '@mui/icons-material/Category';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import Inventory2Icon from '@mui/icons-material/Inventory2';
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import DistributedColumnsChart from './bar_chart';
+import PieChart from './pie_chart';
+import LineChart from './line_chart';
+
 
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -102,39 +112,91 @@ const Small = ({ children, className, ellipsis, textTransform, ...props }: any) 
 
 
 export default function Dashboard() {
+
+    // const data = [
+    //     { text: 'Dashbaord', icon: <DashboardIcon /> },
+    //     { text: 'Category', icon: <CategoryIcon /> },
+    //     { text: 'Product', icon: <Inventory2Icon /> },
+    //     { text: 'Order', icon: <ShoppingCartCheckoutIcon /> },
+    //     { text: 'View Bill', icon: <ReceiptIcon /> },
+    //     { text: 'Users', icon: <GroupIcon /> },
+    //   ];
     const cardList = [
-        { name: 'New Leads', amount: 3050, icon: 'group' },
-        { name: 'This week Sales', amount: '$80,500', icon: 'attach_money' },
-        { name: 'Inventory Status', amount: '8.5% Stock Surplus', icon: 'store' },
-        { name: 'Orders to deliver', amount: '305 Orders', icon: 'shopping_cart' },
+        { name: 'Total Category', amount: 3050, icon: <CategoryIcon /> },
+        { name: 'Total Product', amount: '$80,500', icon: <Inventory2Icon /> },
+        { name: 'Total Order', amount: '$30', icon: <ShoppingCartCheckoutIcon /> },
+        { name: 'Total Bill', amount: '305 Bill', icon: <ReceiptIcon /> },
     ];
-
+    {/* <Typography variant="subtitle1" color="textSecondary" align="center">
+                No data available in table
+                </Typography> */}
     return (
-        <Grid container spacing={3} sx={{ mb: '24px' }}>
-            {cardList.map((item, index) => (
-                <Grid item xs={12} md={6} key={index}>
-                    <StyledCard elevation={6}>
-                        <ContentBox>
-                            <Icon className="icon">{item.icon}</Icon>
-                            <Box ml="12px">
-                                <Small>{item.name}</Small>
-                                <Heading>{item.amount}</Heading>
-                            </Box>
-                        </ContentBox>
+        <>
+            <Grid container xs={12} spacing={3} sx={{ mb: '24px' }}>
+                {cardList.map((item, index) => (
+                    <Grid item xs={2} md={3} key={index}>
+                        <StyledCard elevation={2}>
+                            <ContentBox>
+                                {/* <Icon className=''>{item.icon}</Icon> */}
+                                <Box ml="30px">
+                                    <Typography variant="h6" color="textSecondary" align="center">
+                                        {item.name}
+                                    </Typography>
+                                    <Typography variant="h6" style={{ color: 'black' }} align="center">
+                                        {item.amount}
+                                    </Typography>
+                                    {/* <Small>{item.amount}</Small> */}
+                                    {/* <Heading>{item.amount}</Heading> */}
 
-                        <Tooltip title="View Details" placement="top">
-                            <IconButton>
-                                <Icon>arrow_right_alt</Icon>
-                            </IconButton>
-                        </Tooltip>
-                    </StyledCard>
-                    {/* <ToastContainer
+                                </Box>
+                            </ContentBox>
+
+                            {/* <Tooltip title="View Details" placement="top">
+                                <IconButton>
+                                    <ArrowRightAltIcon />
+                                </IconButton>
+                            </Tooltip> */}
+                        </StyledCard>
+                        {/* <ToastContainer
                         position="top-right"
                         autoClose={5000}
                     /> */}
+                    </Grid>
+
+                ))}
+
+
+            </Grid>
+
+            <Grid container xs={12} spacing={3} sx={{ mb: '24px' }}>
+                <Grid item xs={12} md={6}>
+                    <StyledCard elevation={2}>
+                        <ContentBox>
+                        <DistributedColumnsChart />
+                        </ContentBox>
+                    </StyledCard>
                 </Grid>
 
-            ))}
-        </Grid>
+                <Grid item xs={12} md={6}>
+                    <StyledCard elevation={2}>
+                        <ContentBox>
+                        <PieChart />
+                        </ContentBox>
+                    </StyledCard>
+                </Grid>
+
+                <Grid item xs={12} md={6} mb={5}>
+                    <StyledCard elevation={2}>
+                        <ContentBox>
+                        <LineChart />
+                        </ContentBox>
+                    </StyledCard>
+                </Grid>
+            </Grid>
+
+
+
+        </>
+
     );
 }

@@ -16,6 +16,13 @@
 
 
 
+.homePageSlider img{
+  width : 100%;
+}
+
+
+
+
 .active
 {
   color:'red';
@@ -38,3 +45,7 @@
 .error-msg{
   color: red;
 } */
+
+apexcharts-canvas .apexcharts-toolbar svg[data-icon='download'] {
+  display: none !important;
+}

@@ -22,7 +22,7 @@ export default function Footer() {
       <CssBaseline />
       <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
         <Toolbar className={classes.footer}>
-         <Typography  style={{fontSize: "1rem",}} align="center">Copyright © 2022 Specialty Payments. All rights reserved.</Typography>
+         <Typography  style={{fontSize: "1rem",}} align="center">Copyright © 2024. All rights reserved.</Typography>
         </Toolbar>
       </AppBar>
     </React.Fragment>

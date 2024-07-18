@@ -3,6 +3,7 @@ import {
   alpha,
   Card,
   CssBaseline,
+  Grid,
   InputBase,
   Toolbar,
   Typography,
@@ -32,11 +33,17 @@ import Menu from "@mui/material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-
+import CategoryIcon from "@mui/icons-material/Category";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import Inventory2Icon from "@mui/icons-material/Inventory2";
+import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import GroupIcon from "@mui/icons-material/Group";
 const drawerWidth = 200;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
+  // height: "91.8vh",
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
@@ -45,6 +52,7 @@ const openedMixin = (theme: Theme): CSSObject => ({
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
+  // height: "91.8vh",
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -104,51 +112,17 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(2, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "40ch",
-    },
-  },
-}));
+
+
 
 export default function Sidebar() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  var [selectedRoutes, setRoute] = React.useState(0);
+  const [open, setOpen] = React.useState(true);
 
+  var [selectedRoutes, setRoute] = React.useState(0);
+  var [currentUser, setCurrentUser] = useState<any>();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -264,12 +238,28 @@ export default function Sidebar() {
   const location = useLocation();
 
   useEffect(() => {
+
+    const currentUsers =  localStorage.getItem('Users');
+    if (currentUsers != null) {
+      const userInfoParsed = JSON.parse(currentUsers);
+      debugger
+    
+
+      setCurrentUser(userInfoParsed);
+      console.log(currentUser)
+    }
+
+    debugger
+
     if (location.pathname == "/home/dashboard") {
       setRoute(0);
-    } else if (location.pathname == "/home/merchant-list") {
+    } else if (
+      location.pathname == "/home/category-list" ||
+      location.pathname == "/home/add-category"
+    ) {
       setRoute(1);
-    } else if (location.pathname == "/home/category-list" || location.pathname=="/home/add-category") {
-      setRoute(2);
+    } else if (location.pathname == "/home/user-list") {
+      setRoute(5);
     }
   });
 
@@ -277,11 +267,22 @@ export default function Sidebar() {
     if (value == 0) {
       navigate("/home/dashboard");
     } else if (value == 1) {
-      navigate("/home/merchant-list");
-    } else if (value == 2) {
       navigate("/home/category-list");
     }
+    else if (value == 5) {
+      navigate("/home/user-list");
+    }
   };
+
+  const data = [
+    { text: "Dashbaord", icon: <DashboardIcon /> },
+    { text: "Category", icon: <CategoryIcon /> },
+    { text: "Book", icon: <Inventory2Icon /> },
+    { text: "Order", icon: <ShoppingCartCheckoutIcon /> },
+    // { text: "View Bill", icon: <ReceiptIcon /> },
+    { text: "Users", icon: <GroupIcon /> },
+  ];
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -310,11 +311,12 @@ export default function Sidebar() {
               component="div"
               sx={{ display: { xs: "none", sm: "block" } }}
             >
-              Working Progress..........
+              Library Mangement System
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <IconButton
+              <p>{currentUser?.firstName} {currentUser?.lastName}</p>
+              {/* <IconButton
                 size="large"
                 aria-label="show 4 new mails"
                 color="inherit"
@@ -322,8 +324,8 @@ export default function Sidebar() {
                 <Badge badgeContent={4} color="error">
                   <MailIcon />
                 </Badge>
-              </IconButton>
-              <IconButton
+              </IconButton> */}
+              {/* <IconButton
                 size="large"
                 aria-label="show 17 new notifications"
                 color="inherit"
@@ -331,7 +333,7 @@ export default function Sidebar() {
                 <Badge badgeContent={17} color="error">
                   <NotificationsIcon />
                 </Badge>
-              </IconButton>
+              </IconButton> */}
               <IconButton
                 size="large"
                 edge="end"
@@ -361,7 +363,7 @@ export default function Sidebar() {
         {renderMobileMenu}
         {renderMenu}
       </Box>
-      <Drawer variant="permanent" style={{ maxHeight: 90 }} open={open}>
+      <Drawer variant="permanent" sx={{ height: "20vh" }} open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
@@ -371,46 +373,54 @@ export default function Sidebar() {
             )}
           </IconButton>
         </DrawerHeader>
-        <Divider />
-        <List>
-          {["Dashboard", "Merchant", "Category"].map((text, index) => (
-            <ListItem
-              className={selectedRoutes == index ? "active" : ""}
-              key={text}
-              disablePadding
-              sx={{ display: "block" }}
-              onClick={() => {
-                setRoute(index);
-                navigateToPage(index);
-              }}
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
+        <Grid container spacing={40}>
+          <Grid item xs={40}>
+            <List>
+              {data.map((item, index) => (
+                <ListItem
+                  className={selectedRoutes == index ? "active" : ""}
+                  key={item.text}
+                  disablePadding
+                  sx={{ display: "block" }}
+                  onClick={() => {
+                    setRoute(index);
+                    navigateToPage(index);
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={item.text}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+        </Grid>
       </Drawer>
+      {/* <div style={{ width: "100%", paddingLeft: "30px", paddingTop: "25px", paddingBottom: "25px" }}>
+        <DrawerHeader />
+        <Outlet></Outlet>
+      </div> */}
 
       <Box component="main" sx={{ flexGrow: 8, p: 3 }}>
         <DrawerHeader />
-
         <Outlet></Outlet>
       </Box>
     </Box>
