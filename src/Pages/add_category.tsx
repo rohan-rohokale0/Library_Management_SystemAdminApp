@@ -151,6 +151,8 @@ const AddCategory = ({ open, onDisagree }: any) => {
               {/* </IconButton> */}
             </Grid>
           </Grid>
+
+          
           <Divider></Divider>
           <DialogContent sx={{ p: 2 }}>
             <Grid container spacing={4} sx={{ p: 2 }}>
