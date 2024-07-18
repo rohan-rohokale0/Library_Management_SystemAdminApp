@@ -9,7 +9,6 @@ import {
   Grid,
   Icon,
   IconButton,
-  styled,
   Table,
   TableBody,
   TableCell,
@@ -25,6 +24,7 @@ import { useEffect, useState } from "react";
 import { getRequest, postRequest } from "../Services/httpservice";
 import axios, { AxiosError } from "axios";
 import Loader from "../Components/loader";
+import styled from "@emotion/styled";
 
 export interface MerchantMasterViewModel {
   ID: string;
@@ -90,7 +90,7 @@ export interface MerchantMasterViewModel {
   ZipCode: string;
 }
 
-const Item = styled(Paper)(({ theme }) => ({
+const Item = styled(Paper)(({ theme }:any) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
   padding: theme.spacing(1),

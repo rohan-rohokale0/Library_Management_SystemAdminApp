@@ -20,7 +20,7 @@ export default function Footer() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
+      <AppBar  color="primary" sx={{ top: 'auto', bottom: 0 }}>
         <Toolbar className={classes.footer}>
          <Typography  style={{fontSize: "1rem",}} align="center">Copyright © 2024. All rights reserved.</Typography>
         </Toolbar>
