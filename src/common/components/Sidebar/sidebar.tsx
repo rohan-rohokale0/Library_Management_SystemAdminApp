@@ -33,20 +33,12 @@ import Menu from "@mui/material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-<<<<<<< HEAD
 import CategoryIcon from "@mui/icons-material/Category";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import GroupIcon from "@mui/icons-material/Group";
-=======
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import StorefrontIcon from "@mui/icons-material/Storefront";
-import CategoryIcon from "@mui/icons-material/Category";
-import ProductionQuantityLimitsTwoToneIcon from "@mui/icons-material/ProductionQuantityLimitsTwoTone";
-
->>>>>>> c15612441099735efb99d0579d648bc62145fd0a
 const drawerWidth = 200;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -266,16 +258,8 @@ export default function Sidebar() {
       location.pathname == "/home/add-category"
     ) {
       setRoute(1);
-<<<<<<< HEAD
     } else if (location.pathname == "/home/user-list") {
       setRoute(5);
-=======
-    } else if (
-      location.pathname == "/home/category-list" ||
-      location.pathname == "/home/add-category"
-    ) {
-      setRoute(2);
->>>>>>> c15612441099735efb99d0579d648bc62145fd0a
     }
     else if( location.pathname == "/home/product-list" ||  location.pathname == "/home/add-product" )
     {
@@ -296,7 +280,6 @@ export default function Sidebar() {
     }
   };
 
-<<<<<<< HEAD
   const data = [
     { text: "Dashbaord", icon: <DashboardIcon /> },
     { text: "Category", icon: <CategoryIcon /> },
@@ -305,24 +288,6 @@ export default function Sidebar() {
     // { text: "View Bill", icon: <ReceiptIcon /> },
     { text: "Users", icon: <GroupIcon /> },
   ];
-=======
-  const getPlatformIcon = (iconName: any): any => {
-    switch (iconName) {
-      case "DashboardIcon":
-        return <DashboardIcon />;
-      case "StorefrontIcon":
-        return <StorefrontIcon />;
-      case "CategoryIcon":
-        return <CategoryIcon />;
-      case "ProductionQuantityLimitsTwoToneIcon":
-        return (
-          <ProductionQuantityLimitsTwoToneIcon></ProductionQuantityLimitsTwoToneIcon>
-        );
-      default:
-        return <DashboardIcon />; // or return null if you don't have it
-    }
-  };
->>>>>>> c15612441099735efb99d0579d648bc62145fd0a
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -414,7 +379,6 @@ export default function Sidebar() {
             )}
           </IconButton>
         </DrawerHeader>
-<<<<<<< HEAD
         <Grid container spacing={40}>
           <Grid item xs={40}>
             <List>
@@ -455,54 +419,6 @@ export default function Sidebar() {
             </List>
           </Grid>
         </Grid>
-=======
-        <Divider />
-        <List>
-          {[
-            { name: "Dashboard", iconName: "DashboardIcon" },
-            { name: "Merchant", iconName: "StorefrontIcon" },
-            { name: "Category", iconName: "CategoryIcon" },
-            {
-              name: "Product",
-              iconName: "ProductionQuantityLimitsTwoToneIcon",
-            },
-          ].map((text, index) => (
-            <ListItem
-              className={selectedRoutes == index ? "active" : ""}
-              key={text.name}
-              disablePadding
-              sx={{ display: "block" }}
-              onClick={() => {
-                setRoute(index);
-                navigateToPage(index);
-              }}
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {getPlatformIcon(text.iconName)}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text.name}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
->>>>>>> c15612441099735efb99d0579d648bc62145fd0a
       </Drawer>
       {/* <div style={{ width: "100%", paddingLeft: "30px", paddingTop: "25px", paddingBottom: "25px" }}>
         <DrawerHeader />

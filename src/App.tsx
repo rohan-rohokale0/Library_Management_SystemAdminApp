@@ -6,7 +6,6 @@ import store from './Redux/store';
 import Login from './Pages/Login';
 import Home from './Pages/Home';
 import Dashboard from './Pages/Dashboard';
-import MerchantList from './Pages/merchant_list';
 import AddMerchant from './Pages/add_merchant';
 import CategoryList from './Pages/Category/Category_List';
 import AddCategory from './Pages/Category/add_category';
@@ -36,7 +35,6 @@ class App extends Component {
               </Route>
               <Route path='/home' element={< Home />}>
                 <Route path='dashboard' element={< Dashboard />}></Route>
-                <Route path='merchant-list' element={< MerchantList />}></Route>
                 <Route path='add-merchant' element={< AddMerchant />}></Route>
                 <Route path='category-list' element={< CategoryList />}></Route>
                 
